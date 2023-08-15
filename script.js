@@ -10,12 +10,21 @@ clickSound.src = "assets/click.mp3";
 const getPokemon = async () => {
   const allPokemon = [];
   for (let i = 1; i <= 151; i++) {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-  const res = await response.json();
-  allPokemon.push(res);
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
+      if (response.ok) {
+        const res = await response.json();
+        allPokemon.push(res);
+      } else {
+        console.log(`Failed to fetch data for Pokemon ${i}`);
+      }
+    } catch (error) {
+      console.error(`Error fetching data for Pokemon ${i}: ${error}`);
+    }
   }
   return allPokemon;
 };
+
 
 ////////////////////////////////////// MAP
 
@@ -55,7 +64,6 @@ const drawPokemon = (pokemons) => {
     pokemonType.textContent = pokemon.type;
     pokemonType.setAttribute("class", 'pokemon-type');
 
-    // Pokemon abilities
     const pokemonAbility = document.createElement('p');
     pokemonAbility.setAttribute('class', 'pokemon-abs hide');
     pokemonAbility.innerHTML = `<p class="pokemon-abs-title">· abilities ·</p><p class="pokemon-abs-sentence">${pokemon.abilities}</p>`;
@@ -178,14 +186,13 @@ const resetButton = document.createElement('button');
 resetButton.setAttribute("id", "reset-button");
 resetButton.innerText = 'Reset';
 resetButton.addEventListener('click', _ => {
-  location.reload();
+  location.reload(); //inner html vacío
 })
 
 // Pantalla nothing found
 const noPokemonFound = () => {
   myPokedexDiv$$.innerHTML = "";
   const nothingFoundDiv$$ = document.querySelector('.nothing-found');
-  nothingFoundDiv$$.innerHTML =
   `<p>Nothing found :(</p>
   <img src="assets/pokemon-crying.png" alt="pokemon-crying" class="img-notfound">`
   }
