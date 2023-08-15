@@ -22,6 +22,7 @@ const getPokemon = async () => {
       console.error(`Error fetching data for Pokemon ${i}: ${error}`);
     }
   }
+  
   return allPokemon;
 };
 
